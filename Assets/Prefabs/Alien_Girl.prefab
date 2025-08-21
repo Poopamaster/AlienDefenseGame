@@ -50,7 +50,7 @@ MonoBehaviour:
   Health: 600
   DamageValue: 1
   DamageCooldown: 1
-  Speed: 0.12
+  Speed: 0.15
   coinReward: 40
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: e09731310694af54e9d716ccdf70f687, type: 3}
