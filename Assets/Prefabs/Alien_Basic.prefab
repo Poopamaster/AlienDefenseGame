@@ -51,7 +51,7 @@ MonoBehaviour:
   DamageValue: 1
   DamageCooldown: 2
   Speed: 0.1
-  coinReward: 30
+  coinReward: 10
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: 680d31072d0d304438efe3c8fd46db3f, type: 3}
   slashVolume: 1

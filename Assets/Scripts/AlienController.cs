@@ -14,7 +14,7 @@ public class AlienController : MonoBehaviour
     [SerializeField] private string goalTag = "Goal";
 
     [Header("SFX")]
-    public AudioClip slashSfx;                  // ลากไฟล์เสียงฟันดาบมาใส่
+    public AudioClip slashSfx;
     [Range(0f, 1f)] public float slashVolume = 1f;
     void Update()
     {
@@ -39,23 +39,42 @@ public class AlienController : MonoBehaviour
     }
 
     IEnumerator Attack(Collider2D collision)
-    {
-        if (collision == null)
-        {
-            isStopped = false;
-        }
-        else
-        {
-            collision.gameObject.GetComponent<RobotController>().ReceiveDamage(DamageValue);
-            if (slashSfx)
-            {
-                AudioSource.PlayClipAtPoint(slashSfx, Camera.main.transform.position, slashVolume);
-            }
+{
+    if (collision == null) { isStopped = false; yield break; }
 
-            yield return new WaitForSeconds(DamageCooldown);
-            StartCoroutine(Attack(collision));
+    while (true)
+    {
+        if (collision == null || collision.gameObject == null)
+            break;
+
+        var rc = collision.gameObject.GetComponent<RobotController>();
+        var dc = collision.gameObject.GetComponent<DefenseController>();
+
+        if (rc == null && dc == null)
+            break;
+
+        if (rc != null)
+            rc.ReceiveDamage(DamageValue);
+        else
+            dc.ReceiveDamage(DamageValue);
+
+        if (slashSfx)
+            AudioSource.PlayClipAtPoint(slashSfx, Camera.main.transform.position, slashVolume);
+
+        float t = 0f;
+        while (t < DamageCooldown)
+        {
+            if (collision == null || collision.gameObject == null) break;
+            t += Time.deltaTime;
+            yield return null;
         }
+
+        if (collision == null || collision.gameObject == null) break;
     }
+
+    isStopped = false;
+}
+
 
     public void ReceiveDamage(int Damage)
     {

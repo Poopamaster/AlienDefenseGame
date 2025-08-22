@@ -9,13 +9,18 @@ public class AlienSpawner : MonoBehaviour
 
     public float timeBetweenWaves = 10f;
     public int aliensPerWave = 3;
-    public float spawnInterval = 1f; // เวลาห่างระหว่างเอเลี่ยนใน wave
+    public float spawnInterval = 1f;
 
     private int wave = 0;
+
+    private float speedMultiplier = 1f;
+    public float speedIncrease = 1f;
+    public float interval = 3f;
 
     void Start()
     {
         StartCoroutine(SpawnWaves());
+        StartCoroutine(IncreaseSpeedOverTime());
     }
 
     IEnumerator SpawnWaves()
@@ -23,7 +28,9 @@ public class AlienSpawner : MonoBehaviour
         while (true)
         {
             wave++;
-            int count = aliensPerWave + wave; // ยากขึ้นเรื่อยๆ
+            GameManager.Instance.UpdateWaveUI(wave);
+            
+            int count = aliensPerWave + wave;
             for (int i = 0; i < count; i++)
             {
                 SpawnAlien();
@@ -46,8 +53,19 @@ public class AlienSpawner : MonoBehaviour
 
         GameObject alien = Instantiate(alienPrefabs[randomPrefab], spawnPoints[randomSpawn].transform);
         spawnPoints[randomSpawn].aliens.Add(alien);
-    }
 
+        AlienController controller = alien.GetComponent<AlienController>();
+        controller.Speed *= speedMultiplier;
+    }
+    IEnumerator IncreaseSpeedOverTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            speedMultiplier += speedIncrease;
+            Debug.Log("Speed multiplier: " + speedMultiplier);
+        }
+    }
 }
 
 
