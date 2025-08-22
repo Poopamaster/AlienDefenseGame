@@ -13,6 +13,9 @@ public class RobotController : MonoBehaviour
     public int Health;
     internal ObjectContainer container;
 
+    [Header("Economy")]
+    public int buildCost = 0;
+
     private void Update()
     {
         if (aliens.Count > 0)
@@ -37,13 +40,32 @@ public class RobotController : MonoBehaviour
             if (attackTime <= Time.time)
             {
                 GameObject bulletInstance = Instantiate(bullet, transform);
-                bulletInstance.GetComponent<Bullet>().DamageValue = DamageValue;
+
+                var b = bulletInstance.GetComponent<Bullet>();
+                if (b != null)
+                {
+                    b.DamageValue = DamageValue;
+                }
+                else
+                {
+                    var ice = bulletInstance.GetComponent<IceBullet>();
+                    if (ice != null)
+                    {
+                        ice.DamageValue = DamageValue;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Bullet prefab ไม่มีคอมโพเนนต์ Bullet/IceBullet", bulletInstance);
+                    }
+                }
+
                 attackTime = Time.time + attackCooldown;
             }
         }
+
     }
 
-     public void ReceiveDamage(int Damage)
+    public void ReceiveDamage(int Damage)
     {
         Health -= Damage;
         if (Health <= 0)

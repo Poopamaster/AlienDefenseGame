@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameObject gameOverPanel;
 
+    public enum ToolMode { None, Pickaxe }
+    public ToolMode CurrentTool = ToolMode.None;
+
     [Header("Economy")]
     public int coins = 0;
     public TMP_Text coinText;
@@ -24,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Wave Info")]
     public TMP_Text waveText;
+
+    public Texture2D pickaxeCursor;
 
     private void Awake()
     {
@@ -84,6 +89,8 @@ public class GameManager : MonoBehaviour
             {
                 rc.aliens = cont.spawnPoint.aliens;
                 rc.container = cont;
+
+                rc.buildCost = price;
             }
             else if (dc != null)
             {
@@ -137,5 +144,15 @@ public class GameManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
         return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void SetPickaxeMode(bool enabled)
+    {
+        CurrentTool = enabled ? ToolMode.Pickaxe : ToolMode.None;
+
+        if (enabled && pickaxeCursor != null)
+            Cursor.SetCursor(pickaxeCursor, Vector2.zero, CursorMode.Auto);
+        else
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }
