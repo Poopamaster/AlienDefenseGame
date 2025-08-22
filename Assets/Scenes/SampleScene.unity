@@ -5806,8 +5806,8 @@ MonoBehaviour:
   timeBetweenWaves: 10
   aliensPerWave: 3
   spawnInterval: 1
-  speedIncrease: 0.6
-  interval: 20
+  speedIncrease: 0.4
+  interval: 30
 --- !u!1001 &1665756746
 PrefabInstance:
   m_ObjectHideFlags: 0

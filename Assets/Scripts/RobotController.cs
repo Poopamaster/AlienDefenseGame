@@ -18,51 +18,28 @@ public class RobotController : MonoBehaviour
 
     private void Update()
     {
-        if (aliens.Count > 0)
+        toAttack = GetClosestAlienAhead();
+
+        if (toAttack == null) return;
+
+        if (Time.time >= attackTime)
         {
-            float distance = 1900;
-            foreach (GameObject alien in aliens)
+            GameObject bulletInstance = Instantiate(bullet, transform);
+
+            var b = bulletInstance.GetComponent<Bullet>();
+            if (b != null)
             {
-                float alienDistance = Vector3.Distance(transform.position, alien.transform.position);
-                if (alienDistance < distance)
-                {
-                    toAttack = alien;
-                    distance = alienDistance;
-                }
+                b.DamageValue = DamageValue;
             }
-        }
-        else
-        {
-            toAttack = null;
-        }
-        if (toAttack != null)
-        {
-            if (attackTime <= Time.time)
+            else
             {
-                GameObject bulletInstance = Instantiate(bullet, transform);
-
-                var b = bulletInstance.GetComponent<Bullet>();
-                if (b != null)
-                {
-                    b.DamageValue = DamageValue;
-                }
-                else
-                {
-                    var ice = bulletInstance.GetComponent<IceBullet>();
-                    if (ice != null)
-                    {
-                        ice.DamageValue = DamageValue;
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Bullet prefab ไม่มีคอมโพเนนต์ Bullet/IceBullet", bulletInstance);
-                    }
-                }
-
-                attackTime = Time.time + attackCooldown;
+                var ice = bulletInstance.GetComponent<IceBullet>();
+                if (ice != null) ice.DamageValue = DamageValue;
+                else Debug.LogWarning("Bullet prefab ไม่มีคอมโพเนนต์ Bullet/IceBullet", bulletInstance);
             }
-        }
 
+            attackTime = Time.time + attackCooldown;
+        }
     }
 
     public void ReceiveDamage(int Damage)
@@ -77,5 +54,33 @@ public class RobotController : MonoBehaviour
             }
             Destroy(gameObject);
         }
+    }
+
+    private GameObject GetClosestAlienAhead()
+    {
+        if (aliens == null || aliens.Count == 0) return null;
+
+        float myX = transform.position.x;
+        GameObject best = null;
+        float bestDist = float.PositiveInfinity;
+
+        for (int i = aliens.Count - 1; i >= 0; i--)
+        {
+            var a = aliens[i];
+            if (a == null || !a.activeInHierarchy) { aliens.RemoveAt(i); continue; }
+
+            float ax = a.transform.position.x;
+
+            if (ax <= myX) continue;
+
+            float dist = ax - myX;
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = a;
+            }
+        }
+
+        return best;
     }
 }
