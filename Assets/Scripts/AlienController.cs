@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class AlienController : MonoBehaviour
 {
     public int Health;
-    public int DamageValue;
     public float DamageCooldown;
     public float Speed;
     private float originalSpeed;
@@ -27,12 +27,17 @@ public class AlienController : MonoBehaviour
     [Tooltip("สีตอนโดนสโลว์จากกระสุนน้ำแข็ง")]
     public Color icedColor = new Color(0.2f, 0.7f, 1f, 1f);
 
+    [Header("Attack")]
+    public int DamageValue = 10;
+    public int BaseDamage = 0;
+
     void Start()
     {
         originalSpeed = Speed;
 
-        uiImages = GetComponentsInChildren<Image>(includeInactive: false);
+        if (BaseDamage <= 0) BaseDamage = DamageValue;
 
+        uiImages = GetComponentsInChildren<Image>(includeInactive: false);
         if (uiImages != null && uiImages.Length > 0)
         {
             originalColors = new Color[uiImages.Length];
@@ -78,10 +83,8 @@ public class AlienController : MonoBehaviour
             if (rc == null && dc == null)
                 break;
 
-            if (rc != null)
-                rc.ReceiveDamage(DamageValue);
-            else
-                dc.ReceiveDamage(DamageValue);
+            if (rc != null) rc.ReceiveDamage(DamageValue);
+            else            dc.ReceiveDamage(DamageValue);
 
             if (slashSfx)
                 AudioSource.PlayClipAtPoint(slashSfx, Camera.main.transform.position, slashVolume);
@@ -146,5 +149,11 @@ public class AlienController : MonoBehaviour
         }
 
         slowRoutine = null;
+    }
+
+    public void ScaleDamage(float multiplier)
+    {
+        multiplier = Mathf.Max(0f, multiplier);
+        DamageValue = Mathf.CeilToInt(BaseDamage * multiplier);
     }
 }

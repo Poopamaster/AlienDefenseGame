@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;
     public TMP_Text bestTimeText;
     private float playTime = 0f;
-    private bool isGameOver = false;
+    private bool isGameEnded = false;
 
     [Header("UI Buttons")]
     public GameObject playAgainButton;
@@ -30,6 +30,14 @@ public class GameManager : MonoBehaviour
 
     public Texture2D pickaxeCursor;
 
+    [Header("Win Condition")]
+    [Tooltip("เวลาที่ต้องรอดให้ถึง (วินาที). 15 นาที = 900 วินาที")]
+    public float winTimeSeconds = 15f * 60f; // = 900
+
+    [Header("Result UI")]
+    [Tooltip("ข้อความผลลัพธ์บนหน้าจอ (เช่น Game Over / Your Win!!)")]
+    public TMP_Text resultText;
+
     private void Awake()
     {
         Instance = this;
@@ -38,8 +46,8 @@ public class GameManager : MonoBehaviour
         if (playAgainButton != null) playAgainButton.SetActive(false);
         UpdateCoinUI();
 
-        if (bestTimeText != null)
-            bestTimeText.text = "";
+        if (bestTimeText != null) bestTimeText.text = "";
+        if (resultText != null) resultText.text = ""; // เคลียร์ข้อความผลลัพธ์
     }
 
     public void AddCoins(int amount)
@@ -89,7 +97,6 @@ public class GameManager : MonoBehaviour
             {
                 rc.aliens = cont.spawnPoint.aliens;
                 rc.container = cont;
-
                 rc.buildCost = price;
             }
             else if (dc != null)
@@ -104,18 +111,24 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isGameOver)
+        if (!isGameEnded)
         {
-            playTime += Time.unscaledDeltaTime;
+            playTime += Time.deltaTime;
+
             if (timerText != null)
                 timerText.text = "Time: " + FormatTime(playTime);
+
+            if (playTime >= winTimeSeconds)
+            {
+                Win();
+            }
         }
     }
 
     public void GameOver()
     {
-        Debug.Log("GAME OVER!");
-        isGameOver = true;
+        if (isGameEnded) return; // กันซ้ำ
+        isGameEnded = true;
 
         float best = PlayerPrefs.GetFloat("BestTime", 0f);
         if (playTime > best)
@@ -128,8 +141,37 @@ public class GameManager : MonoBehaviour
         if (bestTimeText != null)
             bestTimeText.text = "Best: " + FormatTime(best);
 
+        if (resultText != null)
+            resultText.text = "Game Over";
+
         if (gameOverPanel) gameOverPanel.SetActive(true);
         if (playAgainButton) playAgainButton.SetActive(true);
+
+        Time.timeScale = 0f;
+    }
+
+    public void Win()
+    {
+        if (isGameEnded) return; // กันซ้ำ
+        isGameEnded = true;
+
+        float best = PlayerPrefs.GetFloat("BestTime", 0f);
+        if (playTime > best)
+        {
+            PlayerPrefs.SetFloat("BestTime", playTime);
+            PlayerPrefs.Save();
+            best = playTime;
+        }
+
+        if (bestTimeText != null)
+            bestTimeText.text = "Best: " + FormatTime(best);
+
+        if (resultText != null)
+            resultText.text = "Your Win!!";
+
+        if (gameOverPanel) gameOverPanel.SetActive(true);
+        if (playAgainButton) playAgainButton.SetActive(true);
+
         Time.timeScale = 0f;
     }
 

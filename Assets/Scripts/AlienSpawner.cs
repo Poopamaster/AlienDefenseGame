@@ -17,6 +17,15 @@ public class AlienSpawner : MonoBehaviour
     public float speedIncrease = 1f;
     public float interval = 3f;
 
+    [Header("Damage Scaling")]
+    [Tooltip("อัตราเพิ่มความแรงต่อ 1 wave (เช่น 0.20 = เพิ่ม 20% จากค่า base ของเอเลี่ยน)")]
+    public float damageGrowthPerWave = 0.20f;
+
+    [Tooltip("จำกัดตัวคูณความแรงสูงสุด (กันโอเวอร์)")]
+    public float maxDamageMultiplier = 5f;
+
+    private float currentDamageMultiplier = 1f;
+
     void Start()
     {
         StartCoroutine(SpawnWaves());
@@ -29,7 +38,10 @@ public class AlienSpawner : MonoBehaviour
         {
             wave++;
             GameManager.Instance.UpdateWaveUI(wave);
-            
+
+            currentDamageMultiplier = 1f + damageGrowthPerWave * (wave - 1);
+            currentDamageMultiplier = Mathf.Min(currentDamageMultiplier, maxDamageMultiplier);
+
             int count = aliensPerWave + wave;
             for (int i = 0; i < count; i++)
             {
@@ -55,7 +67,12 @@ public class AlienSpawner : MonoBehaviour
         spawnPoints[randomSpawn].aliens.Add(alien);
 
         AlienController controller = alien.GetComponent<AlienController>();
-        controller.Speed *= speedMultiplier;
+        if (controller != null)
+        {
+            controller.Speed *= speedMultiplier;
+
+            controller.ScaleDamage(currentDamageMultiplier);
+        }
     }
     IEnumerator IncreaseSpeedOverTime()
     {
@@ -63,7 +80,6 @@ public class AlienSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(interval);
             speedMultiplier += speedIncrease;
-            Debug.Log("Speed multiplier: " + speedMultiplier);
         }
     }
 }

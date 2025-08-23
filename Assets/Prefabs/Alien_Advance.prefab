@@ -124,13 +124,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 1200
-  DamageValue: 1
   DamageCooldown: 1
   Speed: 0.08
-  coinReward: 50
+  coinReward: 70
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: 9176f621433d88845aacaf94fa227d3c, type: 3}
   slashVolume: 1
+  icedColor: {r: 0.2, g: 0.7, b: 1, a: 1}
+  DamageValue: 2
+  BaseDamage: 2
 --- !u!50 &5472290873223336381
 Rigidbody2D:
   serializedVersion: 4
