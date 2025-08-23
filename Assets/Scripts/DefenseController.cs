@@ -5,6 +5,9 @@ public class DefenseController : MonoBehaviour
     [Header("Stats")]
     public int Health;
 
+    [Header("Economy")]
+    public int buildCost = 0;
+
     [HideInInspector] public ObjectContainer container;
 
     public void ReceiveDamage(int damage)

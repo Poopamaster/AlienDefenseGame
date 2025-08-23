@@ -13,6 +13,9 @@ public class PickaxeTool : MonoBehaviour
     [Range(0f, 1f)] public float pickaxeVolume = 1f;
     public GameObject breakFxPrefab;
 
+    [Header("Physics (world pick)")]
+    public LayerMask pickableLayers = ~0;   // ตั้งให้รวมเลเยอร์ของหุ่น/กำแพง
+
     Camera cam;
     EventSystem es;
     GraphicRaycaster[] raycasters;
@@ -30,21 +33,27 @@ public class PickaxeTool : MonoBehaviour
     {
         if (GameManager.Instance.CurrentTool != GameManager.ToolMode.Pickaxe) return;
 
+        // คลิกขวาออกจากโหมด
         if (Input.GetMouseButtonDown(1))
         {
             GameManager.Instance.SetPickaxeMode(false);
             return;
         }
 
+        // คลิกซ้ายขุด
         if (Input.GetMouseButtonDown(0))
         {
-            TryPickaxeUI();
+            // 1) ลองจาก UI ก่อน (รองรับ prefab ที่เป็น UI)
+            if (TryPickaxeUI()) return;
+
+            // 2) ไม่เจอใน UI → ยิง Physics2D ที่โลกจริง
+            TryPickaxeWorld();
         }
     }
 
-    void TryPickaxeUI()
+    bool TryPickaxeUI()
     {
-        if (es == null || raycasters == null || raycasters.Length == 0) return;
+        if (es == null || raycasters == null || raycasters.Length == 0) return false;
 
         pointer.position = Input.mousePosition;
 
@@ -61,14 +70,48 @@ public class PickaxeTool : MonoBehaviour
             {
                 if (r.gameObject == null) continue;
 
+                // หาได้ทั้งที่ตัวเอง/พาเรนต์
                 var robot = r.gameObject.GetComponent<RobotController>() ??
                             r.gameObject.GetComponentInParent<RobotController>();
-                if (robot != null)
-                {
-                    RemoveRobot(robot);
-                    return;
-                }
+                if (robot != null) { RemoveRobot(robot); return true; }
+
+                var defense = r.gameObject.GetComponent<DefenseController>() ??
+                              r.gameObject.GetComponentInParent<DefenseController>();
+                if (defense != null) { RemoveDefense(defense); return true; }
+
+                // เปิดส่วนนี้ถ้าจะให้ขุด Bomb ด้วย
+                // var bomb = r.gameObject.GetComponent<Bomb>() ?? r.gameObject.GetComponentInParent<Bomb>();
+                // if (bomb != null) { RemoveBomb(bomb); return true; }
             }
+        }
+        return false;
+    }
+
+    void TryPickaxeWorld()
+    {
+        if (cam == null) return;
+
+        Vector3 world = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 p = new Vector2(world.x, world.y);
+
+        // เก็บทุกคอลไลเดอร์ ณ จุดคลิก
+        var hits = Physics2D.OverlapPointAll(p, pickableLayers);
+        if (hits == null || hits.Length == 0) return;
+
+        foreach (var h in hits)
+        {
+            if (h == null) continue;
+
+            // ส่วนมากคอมโพเนนต์จะอยู่ที่ root → ลอง Parent ก่อน
+            var robot = h.GetComponentInParent<RobotController>() ?? h.GetComponent<RobotController>();
+            if (robot != null) { RemoveRobot(robot); return; }
+
+            var defense = h.GetComponentInParent<DefenseController>() ?? h.GetComponent<DefenseController>();
+            if (defense != null) { RemoveDefense(defense); return; }
+
+            // เปิดส่วนนี้ถ้าจะให้ขุด Bomb ด้วย
+            // var bomb = h.GetComponentInParent<Bomb>() ?? h.GetComponent<Bomb>();
+            // if (bomb != null) { RemoveBomb(bomb); return; }
         }
     }
 
@@ -87,5 +130,22 @@ public class PickaxeTool : MonoBehaviour
         }
 
         Destroy(robot.gameObject);
+    }
+
+    void RemoveDefense(DefenseController defense)
+    {
+        int refund = Mathf.Max(0, Mathf.RoundToInt(defense.buildCost * refundPercent));
+        GameManager.Instance.AddCoins(refund);
+
+        if (breakFxPrefab) Instantiate(breakFxPrefab, defense.transform.position, Quaternion.identity);
+        if (pickaxeSfx) AudioSource.PlayClipAtPoint(pickaxeSfx, cam.transform.position, pickaxeVolume);
+
+        if (defense.container != null)
+        {
+            defense.container.isFull = false;
+            defense.container.Highlight(false);
+        }
+
+        Destroy(defense.gameObject);
     }
 }

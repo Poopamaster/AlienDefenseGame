@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Win Condition")]
     [Tooltip("เวลาที่ต้องรอดให้ถึง (วินาที). 15 นาที = 900 วินาที")]
-    public float winTimeSeconds = 15f * 60f; // = 900
+    public float winTimeSeconds = 15f * 60f;
 
     [Header("Result UI")]
     [Tooltip("ข้อความผลลัพธ์บนหน้าจอ (เช่น Game Over / Your Win!!)")]
@@ -79,63 +79,64 @@ public class GameManager : MonoBehaviour
     }
 
     public void PlaceObject()
-{
-    if (draggingObject != null && currentContainer != null)
     {
-        var cont = currentContainer.GetComponent<ObjectContainer>();
-        var card = draggingObject.GetComponent<ObjectDragging>().card;
-
-        int price = card.cost;
-        if (!TrySpend(price)) return;
-
-        GameObject objectGame = Instantiate(
-            card.object_Game,
-            cont.transform.position,
-            Quaternion.identity,
-            cont.transform
-        );
-
-        var rect = objectGame.GetComponent<RectTransform>();
-        if (rect != null)
+        if (draggingObject != null && currentContainer != null)
         {
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
-            rect.localRotation = Quaternion.identity;
-            rect.localScale = Vector3.one;
-        }
-        else
-        {
-            objectGame.transform.localPosition = Vector3.zero;
-            objectGame.transform.localRotation = Quaternion.identity;
-            objectGame.transform.localScale = Vector3.one;
+            var cont = currentContainer.GetComponent<ObjectContainer>();
+            var card = draggingObject.GetComponent<ObjectDragging>().card;
 
-            var p = objectGame.transform.localPosition;
-            objectGame.transform.localPosition = new Vector3(p.x, p.y, 0f);
-        }
+            int price = card.cost;
+            if (!TrySpend(price)) return;
 
-        var rc = objectGame.GetComponent<RobotController>();
-        var dc = objectGame.GetComponent<DefenseController>();
-        var bomb = objectGame.GetComponent<Bomb>();
+            GameObject objectGame = Instantiate(
+                card.object_Game,
+                cont.transform.position,
+                Quaternion.identity,
+                cont.transform
+            );
 
-        if (rc != null)
-        {
-            rc.aliens = cont.spawnPoint.aliens;
-            rc.container = cont;
-            rc.buildCost = price;
-        }
-        else if (dc != null)
-        {
-            dc.container = cont;
-        }
-        else if (bomb != null)
-        {
-            bomb.container = cont;
-        }
+            var rect = objectGame.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = Vector2.zero;
+                rect.localRotation = Quaternion.identity;
+                rect.localScale = Vector3.one;
+            }
+            else
+            {
+                objectGame.transform.localPosition = Vector3.zero;
+                objectGame.transform.localRotation = Quaternion.identity;
+                objectGame.transform.localScale = Vector3.one;
 
-        cont.isFull = true;
-        cont.Highlight(false);
+                var p = objectGame.transform.localPosition;
+                objectGame.transform.localPosition = new Vector3(p.x, p.y, 0f);
+            }
+
+            var rc = objectGame.GetComponent<RobotController>();
+            var dc = objectGame.GetComponent<DefenseController>();
+            var bomb = objectGame.GetComponent<Bomb>();
+
+            if (rc != null)
+            {
+                rc.aliens = cont.spawnPoint.aliens;
+                rc.container = cont;
+                rc.buildCost = price;
+            }
+            else if (dc != null)
+            {
+                dc.container = cont;
+                dc.buildCost = price;
+            }
+            else if (bomb != null)
+            {
+                bomb.container = cont;
+            }
+
+            cont.isFull = true;
+            cont.Highlight(false);
+        }
     }
-}
 
 
     private void Update()

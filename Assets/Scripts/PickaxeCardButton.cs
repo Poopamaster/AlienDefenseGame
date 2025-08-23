@@ -23,7 +23,6 @@ public class PickaxeCardButton : MonoBehaviour
     {
         if (_img == null) return;
 
-        // อัปเดตสีปุ่มทุกเฟรมตามสถานะโหมด
         if (GameManager.Instance != null && GameManager.Instance.CurrentTool == GameManager.ToolMode.Pickaxe)
             _img.color = activeColor;
         else

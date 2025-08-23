@@ -181,6 +181,9 @@ MonoBehaviour:
   pickaxeSfx: {fileID: 0}
   pickaxeVolume: 1
   breakFxPrefab: {fileID: 0}
+  pickableLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &36385387
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,14 +447,14 @@ MonoBehaviour:
   currentContainer: {fileID: 0}
   gameOverPanel: {fileID: 248327394}
   CurrentTool: 0
-  coins: 10000
+  coins: 650
   coinText: {fileID: 173165937}
   timerText: {fileID: 273648670}
   bestTimeText: {fileID: 2002755752}
   playAgainButton: {fileID: 1460420268}
   waveText: {fileID: 976017211}
   pickaxeCursor: {fileID: 2800000, guid: 5f29c8aa87a166e41ad9b6ae9f0bf30e, type: 3}
-  winTimeSeconds: 900
+  winTimeSeconds: 600
   resultText: {fileID: 248327396}
 --- !u!1001 &157331404
 PrefabInstance:
