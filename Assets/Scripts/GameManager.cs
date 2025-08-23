@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         UpdateCoinUI();
 
         if (bestTimeText != null) bestTimeText.text = "";
-        if (resultText != null) resultText.text = ""; // เคลียร์ข้อความผลลัพธ์
+        if (resultText != null) resultText.text = "";
     }
 
     public void AddCoins(int amount)
@@ -79,35 +79,64 @@ public class GameManager : MonoBehaviour
     }
 
     public void PlaceObject()
+{
+    if (draggingObject != null && currentContainer != null)
     {
-        if (draggingObject != null && currentContainer != null)
+        var cont = currentContainer.GetComponent<ObjectContainer>();
+        var card = draggingObject.GetComponent<ObjectDragging>().card;
+
+        int price = card.cost;
+        if (!TrySpend(price)) return;
+
+        GameObject objectGame = Instantiate(
+            card.object_Game,
+            cont.transform.position,
+            Quaternion.identity,
+            cont.transform
+        );
+
+        var rect = objectGame.GetComponent<RectTransform>();
+        if (rect != null)
         {
-            var cont = currentContainer.GetComponent<ObjectContainer>();
-            var card = draggingObject.GetComponent<ObjectDragging>().card;
-            int price = card.cost;
-
-            if (!TrySpend(price)) return;
-
-            GameObject objectGame = Instantiate(card.object_Game, cont.transform);
-
-            var rc = objectGame.GetComponent<RobotController>();
-            var dc = objectGame.GetComponent<DefenseController>();
-
-            if (rc != null)
-            {
-                rc.aliens = cont.spawnPoint.aliens;
-                rc.container = cont;
-                rc.buildCost = price;
-            }
-            else if (dc != null)
-            {
-                dc.container = cont;
-            }
-
-            cont.isFull = true;
-            cont.Highlight(false);
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.localRotation = Quaternion.identity;
+            rect.localScale = Vector3.one;
         }
+        else
+        {
+            objectGame.transform.localPosition = Vector3.zero;
+            objectGame.transform.localRotation = Quaternion.identity;
+            objectGame.transform.localScale = Vector3.one;
+
+            var p = objectGame.transform.localPosition;
+            objectGame.transform.localPosition = new Vector3(p.x, p.y, 0f);
+        }
+
+        var rc = objectGame.GetComponent<RobotController>();
+        var dc = objectGame.GetComponent<DefenseController>();
+        var bomb = objectGame.GetComponent<Bomb>();
+
+        if (rc != null)
+        {
+            rc.aliens = cont.spawnPoint.aliens;
+            rc.container = cont;
+            rc.buildCost = price;
+        }
+        else if (dc != null)
+        {
+            dc.container = cont;
+        }
+        else if (bomb != null)
+        {
+            bomb.container = cont;
+        }
+
+        cont.isFull = true;
+        cont.Highlight(false);
     }
+}
+
 
     private void Update()
     {
@@ -127,7 +156,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (isGameEnded) return; // กันซ้ำ
+        if (isGameEnded) return;
         isGameEnded = true;
 
         float best = PlayerPrefs.GetFloat("BestTime", 0f);
@@ -152,7 +181,7 @@ public class GameManager : MonoBehaviour
 
     public void Win()
     {
-        if (isGameEnded) return; // กันซ้ำ
+        if (isGameEnded) return;
         isGameEnded = true;
 
         float best = PlayerPrefs.GetFloat("BestTime", 0f);
