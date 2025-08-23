@@ -22,7 +22,7 @@ public class IceBullet : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(new Vector3(movementSpeed, 0, 0));
+        transform.Translate(Vector3.right * movementSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

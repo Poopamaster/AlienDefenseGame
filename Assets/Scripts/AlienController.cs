@@ -50,7 +50,8 @@ public class AlienController : MonoBehaviour
     {
         if (!isStopped)
         {
-            transform.Translate(new Vector3(Speed * -1, 0, 0));
+            // transform.Translate(new Vector3(Speed * -1, 0, 0));
+            transform.Translate(Vector3.left * Speed * Time.deltaTime);
         }
     }
 

@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     [Range(0f, 1f)] public float hitVolume = 1f;
     void Update()
     {
-        transform.Translate(new Vector3(movementSpeed, 0, 0));
+        transform.Translate(Vector3.right * movementSpeed * Time.deltaTime);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

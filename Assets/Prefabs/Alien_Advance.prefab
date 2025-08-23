@@ -125,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 1200
   DamageCooldown: 1
-  Speed: 0.08
+  Speed: 8
   coinReward: 70
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: 9176f621433d88845aacaf94fa227d3c, type: 3}

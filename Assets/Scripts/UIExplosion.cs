@@ -24,7 +24,7 @@ public class UIExplosion : MonoBehaviour
     {
         if (!rect || !img) { Destroy(gameObject); return; }
 
-        t += Time.unscaledDeltaTime;                 // ใช้เวลาจริง
+        t += Time.deltaTime;
         float k = Mathf.Clamp01(t / duration);
 
         // scale
