@@ -6179,11 +6179,11 @@ MonoBehaviour:
   - {fileID: 1570551466}
   - {fileID: 2118407078}
   - {fileID: 1935907049}
-  timeBetweenWaves: 10
-  aliensPerWave: 3
+  timeBetweenWaves: 5
+  aliensPerWave: 7
   spawnInterval: 1
   speedIncrease: 0.2
-  interval: 30
+  interval: 20
   damageGrowthPerWave: 0.2
   maxDamageMultiplier: 5
 --- !u!1001 &1665756746
