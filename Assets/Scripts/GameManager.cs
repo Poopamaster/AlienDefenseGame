@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
     public GameObject draggingObject;
@@ -135,6 +136,8 @@ public class GameManager : MonoBehaviour
 
             cont.isFull = true;
             cont.Highlight(false);
+
+            card.StartCooldownNow();
         }
     }
 

@@ -144,5 +144,5 @@ MonoBehaviour:
   slowDuration: 5
   aoeRadius: 100
   alienLayer: 9
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: b65315bbb3d072a40a7456c0fb1a9cd8, type: 3}
+  hitVolume: 0.18

@@ -141,4 +141,4 @@ MonoBehaviour:
   movementSpeed: 700
   DamageValue: 0
   hitSfx: {fileID: 8300000, guid: 85d184b9255ff594493c2de837879f2b, type: 3}
-  hitVolume: 0.601
+  hitVolume: 0.3

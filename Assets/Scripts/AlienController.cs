@@ -50,7 +50,6 @@ public class AlienController : MonoBehaviour
     {
         if (!isStopped)
         {
-            // transform.Translate(new Vector3(Speed * -1, 0, 0));
             transform.Translate(Vector3.left * Speed * Time.deltaTime);
         }
     }
@@ -85,7 +84,7 @@ public class AlienController : MonoBehaviour
                 break;
 
             if (rc != null) rc.ReceiveDamage(DamageValue);
-            else            dc.ReceiveDamage(DamageValue);
+            else dc.ReceiveDamage(DamageValue);
 
             if (slashSfx)
                 AudioSource.PlayClipAtPoint(slashSfx, Camera.main.transform.position, slashVolume);
@@ -156,5 +155,10 @@ public class AlienController : MonoBehaviour
     {
         multiplier = Mathf.Max(0f, multiplier);
         DamageValue = Mathf.CeilToInt(BaseDamage * multiplier);
+    }
+    
+    public bool IsSlowed()
+    {
+        return Time.time < slowEndTime;
     }
 }

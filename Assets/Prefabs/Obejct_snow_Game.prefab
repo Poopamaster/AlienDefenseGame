@@ -144,7 +144,8 @@ MonoBehaviour:
   - {fileID: 4107843377735478346, guid: 10a9ddfccd168914cbbc47f6b42f16c8, type: 3}
   - {fileID: 5384609315999147275, guid: e391786c15cb13a438c4ba613a98c193, type: 3}
   toAttack: {fileID: 0}
-  attackCooldown: 5
+  attackCooldown: 4
   attackTime: 0
-  DamageValue: 90
-  Health: 10
+  DamageValue: 70
+  Health: 50
+  buildCost: 0

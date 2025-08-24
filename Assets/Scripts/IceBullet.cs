@@ -29,18 +29,21 @@ public class IceBullet : MonoBehaviour
     {
         if (collision.gameObject.layer == alienLayer)
         {
-            DoAoeHit();
+            bool shouldPlaySfx = DoAoeHit();
 
-            if (hitSfx)
+            if (shouldPlaySfx && hitSfx)
+            {
                 AudioSource.PlayClipAtPoint(hitSfx, Camera.main.transform.position, hitVolume);
+            }
 
             Destroy(gameObject);
         }
     }
 
-    private void DoAoeHit()
+    private bool DoAoeHit()
     {
         int mask = 1 << alienLayer;
+        bool anyNewlySlowed = false;
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, aoeRadius, mask);
         foreach (var h in hits)
@@ -48,9 +51,17 @@ public class IceBullet : MonoBehaviour
             var alien = h.GetComponent<AlienController>();
             if (alien == null) continue;
 
+            bool wasSlowed = alien.IsSlowed();
+
             alien.ReceiveDamage(DamageValue);
+
             alien.ApplySlow(slowPercentage, slowDuration);
+
+            if (!wasSlowed)
+                anyNewlySlowed = true;
         }
+
+        return anyNewlySlowed;
     }
 
     private void OnDrawGizmosSelected()

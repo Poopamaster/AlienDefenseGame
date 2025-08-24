@@ -129,7 +129,7 @@ MonoBehaviour:
   coinReward: 70
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: 9176f621433d88845aacaf94fa227d3c, type: 3}
-  slashVolume: 1
+  slashVolume: 0.3
   icedColor: {r: 0.2, g: 0.7, b: 1, a: 1}
   DamageValue: 2
   BaseDamage: 2

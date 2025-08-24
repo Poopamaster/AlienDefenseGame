@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5384609315999147275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53,7 +53,7 @@ MonoBehaviour:
   coinReward: 50
   goalTag: Goal
   slashSfx: {fileID: 8300000, guid: e09731310694af54e9d716ccdf70f687, type: 3}
-  slashVolume: 1
+  slashVolume: 0.3
   icedColor: {r: 0.2, g: 0.7, b: 1, a: 1}
   DamageValue: 3
   BaseDamage: 3
@@ -94,10 +94,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 6.05}
+    newSize: {x: 5.12, y: 5.86}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -113,8 +113,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7147704416633369369}
-  - component: {fileID: 354497346804301972}
-  - component: {fileID: 3823227933817960911}
+  - component: {fileID: 8729352596176300959}
+  - component: {fileID: 79753579284282557}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -139,10 +139,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 46}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &354497346804301972
+--- !u!222 &8729352596176300959
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,7 +150,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8468894309909480199}
   m_CullTransparentMesh: 1
---- !u!114 &3823227933817960911
+--- !u!114 &79753579284282557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

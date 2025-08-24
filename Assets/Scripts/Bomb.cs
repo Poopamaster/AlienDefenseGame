@@ -21,15 +21,15 @@ public class Bomb : MonoBehaviour
     public LayerMask alienLayer;
 
     [Header("FX (UI)")]
-    public UIExplosion uiExplodePrefab;         // Prefab UI (ติดสคริปต์ UIExplosion)
+    public UIExplosion uiExplodePrefab;
     public Vector2 uiExplodeSize = new Vector2(220, 220);
 
     [Header("Audio")]
     public AudioClip explodeSfx;
     [Range(0f, 1f)] public float explodeVolume = 1f;
 
-    [HideInInspector] public ObjectContainer container;   // จะถูกเซ็ตตอนวาง
-    private List<GameObject> aliens;                      // เอเลี่ยนในเลนเดียวกัน
+    [HideInInspector] public ObjectContainer container;
+    private List<GameObject> aliens;
 
     private float spawnTime;
     private bool armed = false;
@@ -96,37 +96,42 @@ void Explode()
 
     Vector3 origin;
     var rt = GetComponent<RectTransform>();
-    if (rt != null && container != null)
-        origin = container.transform.position;
-    else
-        origin = transform.position;
+    origin = (rt != null && container != null) ? container.transform.position : transform.position;
 
     Collider2D[] cols = Physics2D.OverlapCircleAll(origin, radius, alienLayer);
-
     if (cols == null || cols.Length == 0)
         cols = Physics2D.OverlapCircleAll(origin, radius);
 
-    var hitSet = new HashSet<AlienController>();
-
+    var targets = new HashSet<AlienController>();
     foreach (var c in cols)
     {
         if (c == null) continue;
-
-        var ac = c.GetComponentInParent<AlienController>();
-        if (ac == null)
-        {
-            ac = c.GetComponent<AlienController>();
-            if (ac == null)
-                ac = c.GetComponentInChildren<AlienController>();
-        }
-
+        var ac = c.GetComponentInParent<AlienController>() ??
+                 c.GetComponent<AlienController>() ??
+                 c.GetComponentInChildren<AlienController>();
         if (ac != null && ac.gameObject.activeInHierarchy)
-            hitSet.Add(ac);
+            targets.Add(ac);
     }
 
-    // ทำดาเมจ
-    foreach (var ac in hitSet)
-        ac.ReceiveDamage(damage);
+    foreach (var ac in targets)
+    {
+        if (ac == null) continue;
+
+        if (ac.Health - damage <= 0)
+        {
+            int reduced = Mathf.RoundToInt(ac.coinReward * 0.05f);
+            GameManager.Instance.AddCoins(reduced);
+
+            var sp = ac.transform.parent ? ac.transform.parent.GetComponent<SpawnPoint>() : null;
+            if (sp != null) sp.aliens.Remove(ac.gameObject);
+
+            Destroy(ac.gameObject);
+        }
+        else
+        {
+            ac.ReceiveDamage(damage);
+        }
+    }
 
     if (rt != null && uiExplodePrefab != null)
     {
@@ -149,6 +154,7 @@ void Explode()
 
     Destroy(gameObject);
 }
+
 
 
     private void OnDrawGizmosSelected()

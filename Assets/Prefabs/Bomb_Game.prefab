@@ -148,5 +148,5 @@ MonoBehaviour:
   uiExplodePrefab: {fileID: -1124693031766795083, guid: 7cb5f097211eb9b4ea7d9d40913506fe, type: 3}
   uiExplodeSize: {x: 220, y: 220}
   explodeSfx: {fileID: 8300000, guid: 5d0c91f4be92ef0408de4c7f2e54ff8b, type: 3}
-  explodeVolume: 1
+  explodeVolume: 0.3
   container: {fileID: 0}
