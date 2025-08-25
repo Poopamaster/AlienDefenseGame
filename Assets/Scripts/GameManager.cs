@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Buttons")]
     public GameObject playAgainButton;
+    public GameObject backToMainButton;
 
     [Header("Wave Info")]
     public TMP_Text waveText;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (playAgainButton != null) playAgainButton.SetActive(false);
+        if (backToMainButton != null) backToMainButton.SetActive(false);
         UpdateCoinUI();
 
         if (bestTimeText != null) bestTimeText.text = "";
@@ -141,7 +143,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
         if (!isGameEnded)
@@ -179,6 +180,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel) gameOverPanel.SetActive(true);
         if (playAgainButton) playAgainButton.SetActive(true);
+        if (backToMainButton) backToMainButton.SetActive(true);
 
         Time.timeScale = 0f;
     }
@@ -204,6 +206,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel) gameOverPanel.SetActive(true);
         if (playAgainButton) playAgainButton.SetActive(true);
+        if (backToMainButton) backToMainButton.SetActive(true);
 
         Time.timeScale = 0f;
     }
@@ -213,6 +216,14 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void BackToMain()
+    {
+        
+        SceneManager.LoadScene("StartScenes");
+        
+    }
+
 
     private string FormatTime(float time)
     {

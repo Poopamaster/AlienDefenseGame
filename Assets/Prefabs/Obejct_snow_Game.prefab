@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5940036108318598512}
   - component: {fileID: 6768730225444658752}
   - component: {fileID: 8519527123898987585}
+  - component: {fileID: 8871091304334038466}
   m_Layer: 8
   m_Name: Obejct_snow_Game
   m_TagString: Untagged
@@ -149,3 +150,24 @@ MonoBehaviour:
   DamageValue: 70
   Health: 50
   buildCost: 0
+--- !u!95 &8871091304334038466
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3875360402882356710}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 79ca0cc34a8b5a44f93f16f26fd11e8e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
